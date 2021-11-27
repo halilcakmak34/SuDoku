@@ -34,13 +34,14 @@ public class Sudoku extends JFrame {
         f.close();
 
         _sudokuLogic = new SudokuModel(text);
-        _sudokuLogic.solve();
+        //_sudokuLogic.solve();
         _sudokuBoard = new SudokuBoardDisplay(_sudokuLogic);
 
 
         //System.out.println("Dosya Kapandı!!");
         // 1... Create/initialize components
         JButton moveBtn = new JButton("Ekle");
+        JButton solveBtn = new JButton("Solve");
 
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new FlowLayout());
@@ -51,10 +52,11 @@ public class Sudoku extends JFrame {
         controlPanel.add(new JLabel("Val:"));
         controlPanel.add(_valTF);
         controlPanel.add(moveBtn);
+        controlPanel.add(solveBtn);
 
         //... Add listener
         moveBtn.addActionListener(new MoveListener());
-
+        solveBtn.addActionListener(new SolveMoveListener());
         // 2... Create content panel, set layout
         JPanel content = new JPanel();
         content.setLayout(new BorderLayout());
@@ -89,6 +91,34 @@ public class Sudoku extends JFrame {
                 }
 
             } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(null, "Please enter numeric values.");
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////////////////// MoveListener
+    class SolveMoveListener implements ActionListener {
+        public void actionPerformed(ActionEvent ae) {
+            try {
+                //... Translate row and col to zero-based indexes.
+
+                for (int row = 0; row < SudokuModel.BOARD_SIZE; row++) {
+                    for (int col = SudokuModel.BOARD_START_INDEX; col < SudokuModel.BOARD_SIZE; col++) {
+                        if(_sudokuLogic.getVal(row,col)==SudokuModel.NO_VALUE){
+                            for (int k = SudokuModel.MIN_VALUE; k <= SudokuModel.MAX_VALUE; k++) {
+                                _sudokuLogic.setVal(row, col, k);
+                                if (_sudokuLogic.isLegalMove(row, col)) {
+                                    _sudokuBoard.repaint();
+                                }
+                                else{
+                                    _sudokuLogic.setVal(row, col, SudokuModel.NO_VALUE);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }catch(NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Please enter numeric values.");
             }
         }

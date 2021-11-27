@@ -2,12 +2,12 @@ import java.util.stream.IntStream;
 
 public class SudokuModel {
     //================================================================ constants
-    private static final int BOARD_SIZE = 9;
-    private static final int BOARD_START_INDEX=0;
-    private static int NO_VALUE = 0;
+    public static final int BOARD_SIZE = 9;
+    public static final int BOARD_START_INDEX=0;
+    public static int NO_VALUE = 0;
     private static int SUBSECTION_SIZE = 3;
-    private static int MIN_VALUE = 1;
-    private static int MAX_VALUE = 9;
+    public static int MIN_VALUE = 1;
+    public static int MAX_VALUE = 9;
 
     //=================================================================== fields
     private int[][] _board;
@@ -52,9 +52,13 @@ public class SudokuModel {
     }
 
     //============================================================== islegalMove
+    public boolean isLegalMove(int row, int col) {
+        return isValid(_board,row,col);//row>=0 && row<BOARD_SIZE && col>=0 && col<BOARD_SIZE && val>0 && val<=9 && _board[row][col]==0;
+    }
+
+    //============================================================== islegalMove
     public boolean isLegalMove(int row, int col, int val) {
-        return row>=0 && row<BOARD_SIZE && col>=0 && col<BOARD_SIZE
-                && val>0 && val<=9 && _board[row][col]==0;
+        return row>=0 && row<BOARD_SIZE && col>=0 && col<BOARD_SIZE && val>0 && val<=9 && _board[row][col]==0;
     }
 
     //=================================================================== setVal
@@ -102,13 +106,13 @@ public class SudokuModel {
 
     private boolean rowConstraint(int[][] board, int row) {
         boolean[] constraint = new boolean[BOARD_SIZE];
-        return IntStream.range(BOARD_START_INDEX, BOARD_SIZE)
+        return IntStream.range(BOARD_START_INDEX+1, BOARD_SIZE)
                 .allMatch(column -> checkConstraint(board, row, constraint, column));
     }
 
     private boolean columnConstraint(int[][] board, int column) {
         boolean[] constraint = new boolean[BOARD_SIZE];
-        return IntStream.range(BOARD_START_INDEX, BOARD_SIZE)
+        return IntStream.range(BOARD_START_INDEX+1, BOARD_SIZE)
                 .allMatch(row -> checkConstraint(board, row, constraint, column));
     }
 
@@ -116,7 +120,6 @@ public class SudokuModel {
         boolean[] constraint = new boolean[BOARD_SIZE];
         int subsectionRowStart = (row / SUBSECTION_SIZE) * SUBSECTION_SIZE;
         int subsectionRowEnd = subsectionRowStart + SUBSECTION_SIZE;
-
         int subsectionColumnStart = (column / SUBSECTION_SIZE) * SUBSECTION_SIZE;
         int subsectionColumnEnd = subsectionColumnStart + SUBSECTION_SIZE;
 
