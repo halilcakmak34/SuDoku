@@ -8,21 +8,10 @@ import java.io.IOException;
 import javax.swing.*;
 
 public class Sudoku extends JFrame {
-    ///
-    private static final String INITIAL_BOARD =
-                    "8156....4/" +
-                    "6...75.8./" +
-                    "....9..../" +
-                    "9...417../" +
-                    ".4.....2./" +
-                    "..623...8/" +
-                    "....5..../" +
-                    ".5.91...6/" +
-                    "1....7895";
 
     //=================================================================== fields
-    private SudokuModel _sudokuLogic = new SudokuModel(INITIAL_BOARD);
-    private SudokuBoardDisplay _sudokuBoard = new SudokuBoardDisplay(_sudokuLogic);
+    private SudokuModel _sudokuLogic;//new SudokuModel(INITIAL_BOARD);
+    private SudokuBoardDisplay _sudokuBoard;//new SudokuBoardDisplay(_sudokuLogic);
 
     private JTextField _rowTF = new JTextField(2);
     private JTextField _colTF = new JTextField(2);
@@ -43,6 +32,12 @@ public class Sudoku extends JFrame {
             line = in.readLine();
         }
         f.close();
+
+        _sudokuLogic = new SudokuModel(text);
+        _sudokuLogic.solve();
+        _sudokuBoard = new SudokuBoardDisplay(_sudokuLogic);
+
+
         //System.out.println("Dosya Kapandı!!");
         // 1... Create/initialize components
         JButton moveBtn = new JButton("Ekle");
