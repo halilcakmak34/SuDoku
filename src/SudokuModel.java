@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class SudokuModel {
@@ -63,6 +64,10 @@ public class SudokuModel {
         return isValid(_board,row,col);//row>=0 && row<BOARD_SIZE && col>=0 && col<BOARD_SIZE && val>0 && val<=9 && _board[row][col]==0;
     }
 
+    public boolean isLegalMove2(int row, int col, int val) {
+        return isValid2(_board,row,col,val);//row>=0 && row<BOARD_SIZE && col>=0 && col<BOARD_SIZE && val>0 && val<=9 && _board[row][col]==0;
+    }
+
     //============================================================== islegalMove
     public boolean isLegalMove(int row, int col, int val) {
         return row>=0 && row<BOARD_SIZE && col>=0 && col<BOARD_SIZE && val>0 && val<=9 && _board[row][col]==0;
@@ -112,6 +117,12 @@ public class SudokuModel {
                 && subsectionConstraint(_board, row, column));
     }
 
+    private boolean isValid2(int[][] board, int row, int column,int val) {
+
+        return (rowConstraint2(_board, row,val)
+                && columnConstraint2(_board, column,val));
+    }
+
     private boolean rowConstraint(int[][] board, int row) {
         boolean[] constraint = new boolean[BOARD_SIZE];
 
@@ -120,6 +131,20 @@ public class SudokuModel {
 
         return returnValue;
     }
+    private boolean rowConstraint2(int[][] board, int row,int val) {
+        boolean[] constraint = new boolean[BOARD_SIZE];
+        int[] constraintValue = initConstraintValue();
+        boolean returnValue =  IntStream.range(BOARD_START_INDEX, BOARD_SIZE)
+                .allMatch(column ->checkConstraint2(_board, row, constraint,constraintValue, column,val,true));
+
+        for(int i =0;i<constraintValue.length;i++){
+            if(constraintValue[i]>2){
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     private boolean columnConstraint(int[][] board, int column) {
         boolean[] constraint = new boolean[BOARD_SIZE];
@@ -127,6 +152,21 @@ public class SudokuModel {
                 .allMatch(row ->checkConstraint(_board, row, constraint, column));
 
         return returnValue;
+    }
+
+    private boolean columnConstraint2(int[][] board, int column, int val) {
+        boolean[] constraint = new boolean[BOARD_SIZE];
+        int[] constraintValue = initConstraintValue();
+        boolean returnValue = IntStream.range(BOARD_START_INDEX, BOARD_SIZE)
+                .allMatch(row ->checkConstraint2(_board, row, constraint,constraintValue, column,val,false));
+
+        for(int i =0;i<constraintValue.length;i++){
+            if(constraintValue[i]>2){
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private boolean subsectionConstraint(int[][] board, int row, int column) {
@@ -144,18 +184,54 @@ public class SudokuModel {
         return true;
     }
 
+    private boolean subsectionConstraint2(int[][] board, int row, int column,int val) {
+        boolean[] constraint = new boolean[BOARD_SIZE];
+        int subsectionRowStart = (row / SUBSECTION_SIZE) * SUBSECTION_SIZE;
+        int subsectionRowEnd = subsectionRowStart + SUBSECTION_SIZE;
+        int subsectionColumnStart = (column / SUBSECTION_SIZE) * SUBSECTION_SIZE;
+        int subsectionColumnEnd = subsectionColumnStart + SUBSECTION_SIZE;
+
+        for (int r = subsectionRowStart; r < subsectionRowEnd; r++) {
+            for (int c = subsectionColumnStart; c < subsectionColumnEnd; c++) {
+                int[] constraintValue = initConstraintValue();
+                if (!checkConstraint2(_board, r, constraint,constraintValue,c,val,false)) return false;
+            }
+        }
+        return true;
+    }
+
+    boolean checkConstraint2(
+            int[][] board,
+            int row,
+            boolean[] constraint,
+            int[] constraintValue,
+            int column,int val, boolean isRow) {
+        if(val!=-1 && val!=0 && _board[row][column]==val && isRow){
+            constraintValue[row]++;
+        }
+
+        if(val!=-1 && val!=0 &&  _board[row][column]==val && !isRow){
+            constraintValue[column]++;
+        }
+
+        return true;
+
+
+
+    }
+
     boolean checkConstraint(
             int[][] board,
             int row,
             boolean[] constraint,
             int column) {
-        if (board[row][column] == NO_VALUE || board[row][column] == NEGATIVE_VALUE) {
+        if (board[row][column] == NO_VALUE) {
             return true;
         }
         if (board[row][column] != NO_VALUE) {
             if(board[row][column]>=MIN_VALUE && board[row][column]<=MAX_VALUE){
-                if (!constraint[board[row][column] - 1]) {
-                    constraint[board[row][column] - 1] = true;
+                if (!constraint[column - 1]) {
+                    constraint[column - 1] = true;
                 } else {
                     return false;
                 }
@@ -163,6 +239,14 @@ public class SudokuModel {
             return true;
         }
         return true;
+    }
+
+    public int[] initConstraintValue() {
+        int[] constraintValue = new int[BOARD_SIZE];
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            constraintValue[row] = 0;
+        }
+        return constraintValue;
     }
 
     public void printBoard() {

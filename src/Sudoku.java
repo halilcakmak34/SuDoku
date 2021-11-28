@@ -34,7 +34,7 @@ public class Sudoku extends JFrame {
         f.close();
 
         _sudokuLogic = new SudokuModel(text);
-        _sudokuLogic.solve();
+        //_sudokuLogic.solve();
         _sudokuBoard = new SudokuBoardDisplay(_sudokuLogic);
 
 
@@ -104,17 +104,19 @@ public class Sudoku extends JFrame {
 
                 for (int row = 0; row < SudokuModel.BOARD_SIZE; row++) {
                     for (int col = SudokuModel.BOARD_START_INDEX; col < SudokuModel.BOARD_SIZE; col++) {
-                        if(_sudokuLogic.getVal(row,col)==SudokuModel.NO_VALUE){
+                        //if(_sudokuLogic.getVal(row,col)==SudokuModel.NO_VALUE){
                             for (int k = SudokuModel.MIN_VALUE; k <= SudokuModel.MAX_VALUE; k++) {
-                                _sudokuLogic.setVal(row, col, k);
-                                if (_sudokuLogic.isLegalMove(row, col)) {
+                                if(_sudokuLogic.getVal(row,col)==SudokuModel.NO_VALUE){
+                                    _sudokuLogic.setVal(row, col, k);
+                                }
+                                if (_sudokuLogic.isLegalMove2(row, col,_sudokuLogic.getVal(row,col))) {
                                     _sudokuBoard.repaint();
                                 }
                                 else{
                                     _sudokuLogic.setVal(row, col, SudokuModel.NO_VALUE);
                                 }
                             }
-                        }
+                        //}
                     }
                 }
 
