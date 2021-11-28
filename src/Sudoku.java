@@ -19,7 +19,7 @@ public class Sudoku extends JFrame {
 
     //============================================================== constructor
     public Sudoku() throws IOException {
-        FileReader f = new FileReader("harita.txt");
+        FileReader f = new FileReader("harita2.txt");
         BufferedReader in = new BufferedReader(f);
         String line,text="";
 
@@ -28,13 +28,13 @@ public class Sudoku extends JFrame {
         while (line!=null){
             i++;
             text += line;
-            System.out.println(i+". satır: "+text);;
+            //System.out.println(i+". satır: "+text);;
             line = in.readLine();
         }
         f.close();
 
         _sudokuLogic = new SudokuModel(text);
-        //_sudokuLogic.solve();
+        _sudokuLogic.solve();
         _sudokuBoard = new SudokuBoardDisplay(_sudokuLogic);
 
 

@@ -8,7 +8,7 @@ import javax.swing.JComponent;
 public class SudokuBoardDisplay  extends JComponent {
     //================================================================ constants
     private static final int CELL_PIXELS = 50;  // Size of each cell.
-    private static final int PUZZLE_SIZE = 9;   // Number of rows/cols
+    private static final int PUZZLE_SIZE = 21;   // Number of rows/cols
     private static final int SUBSQUARE   = 3;   // Size of subsquare.
     private static final int BOARD_PIXELS = CELL_PIXELS * PUZZLE_SIZE;
     private static final int TEXT_OFFSET = 15;  // Fine tuning placement of text.
@@ -63,9 +63,18 @@ public class SudokuBoardDisplay  extends JComponent {
         for (int i = 0; i < PUZZLE_SIZE; i++) {
             int yDisplacement = (i+1) * CELL_PIXELS - TEXT_OFFSET;
             for (int j = 0; j < PUZZLE_SIZE; j++) {
-                if (_model.getVal(i, j) != 0) {
-                    int xDisplacement = j * CELL_PIXELS + TEXT_OFFSET;
+                int xDisplacement = j * CELL_PIXELS + TEXT_OFFSET;
+                if (_model.getVal(i, j) != 0 && _model.getVal(i, j) != -1) {
+                    g.setColor(Color.BLACK);
                     g.drawString("" + _model.getVal(i, j), xDisplacement, yDisplacement);
+                }
+                else if (_model.getVal(i, j) == 0){
+                    g.setColor(Color.BLACK);
+                    g.drawString("", xDisplacement, yDisplacement);
+                }
+                else{
+                    g.setColor(Color.RED);
+                    g.drawString("X", xDisplacement, yDisplacement);
                 }
             }
         }

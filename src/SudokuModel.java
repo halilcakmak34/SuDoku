@@ -2,9 +2,12 @@ import java.util.stream.IntStream;
 
 public class SudokuModel {
     //================================================================ constants
-    public static final int BOARD_SIZE = 9;
+    public static final int BOARD_SIZE = 21;
     public static final int BOARD_START_INDEX=0;
+    public static final int PUZZLE_LENGTH = 9;
+    public static int puzzle = 1;
     public static int NO_VALUE = 0;
+    public static int NEGATIVE_VALUE = -1;
     private static int SUBSECTION_SIZE = 3;
     public static int MIN_VALUE = 1;
     public static int MAX_VALUE = 9;
@@ -40,6 +43,10 @@ public class SudokuModel {
                 _board[row][col] = Integer.valueOf(String.valueOf(c)).intValue();  // c-'0'; Translate digit to int.
                 col++;
             } else if (c == '.') {
+                _board[row][col] = 0;
+                col++;
+            }else if (c == 'X') {
+                _board[row][col] = -1;
                 col++;
             } else if (c == '/') {
                 row++;
@@ -89,7 +96,7 @@ public class SudokuModel {
                         if (isValid(_board, row, column) && solve()) {
                             return true;
                         }
-                        //_board[row][column] = NO_VALUE;
+                        _board[row][column] = NO_VALUE;
                     }
                     return false;
                 }
@@ -99,21 +106,27 @@ public class SudokuModel {
     }
 
     private boolean isValid(int[][] board, int row, int column) {
-        return (rowConstraint(board, row)
-                && columnConstraint(board, column)
-                && subsectionConstraint(board, row, column));
+
+        return (rowConstraint(_board, row)
+                && columnConstraint(_board, column)
+                && subsectionConstraint(_board, row, column));
     }
 
     private boolean rowConstraint(int[][] board, int row) {
         boolean[] constraint = new boolean[BOARD_SIZE];
-        return IntStream.range(BOARD_START_INDEX+1, BOARD_SIZE)
-                .allMatch(column -> checkConstraint(board, row, constraint, column));
+
+        boolean returnValue =  IntStream.range(BOARD_START_INDEX+1, BOARD_SIZE)
+                .allMatch(column ->checkConstraint(_board, row, constraint, column));
+
+        return returnValue;
     }
 
     private boolean columnConstraint(int[][] board, int column) {
         boolean[] constraint = new boolean[BOARD_SIZE];
-        return IntStream.range(BOARD_START_INDEX+1, BOARD_SIZE)
-                .allMatch(row -> checkConstraint(board, row, constraint, column));
+        boolean returnValue = IntStream.range(BOARD_START_INDEX+1, BOARD_SIZE)
+                .allMatch(row ->checkConstraint(_board, row, constraint, column));
+
+        return returnValue;
     }
 
     private boolean subsectionConstraint(int[][] board, int row, int column) {
@@ -125,7 +138,7 @@ public class SudokuModel {
 
         for (int r = subsectionRowStart; r < subsectionRowEnd; r++) {
             for (int c = subsectionColumnStart; c < subsectionColumnEnd; c++) {
-                if (!checkConstraint(board, r, constraint, c)) return false;
+                if (!checkConstraint(_board, r, constraint, c)) return false;
             }
         }
         return true;
@@ -136,12 +149,18 @@ public class SudokuModel {
             int row,
             boolean[] constraint,
             int column) {
+        if (board[row][column] == NO_VALUE || board[row][column] == NEGATIVE_VALUE) {
+            return true;
+        }
         if (board[row][column] != NO_VALUE) {
-            if (!constraint[board[row][column] - 1]) {
-                constraint[board[row][column] - 1] = true;
-            } else {
-                return false;
+            if(board[row][column]>=MIN_VALUE && board[row][column]<=MAX_VALUE){
+                if (!constraint[board[row][column] - 1]) {
+                    constraint[board[row][column] - 1] = true;
+                } else {
+                    return false;
+                }
             }
+            return true;
         }
         return true;
     }
