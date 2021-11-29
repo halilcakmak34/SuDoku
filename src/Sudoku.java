@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Random;
 import javax.swing.*;
 
 public class Sudoku extends JFrame {
@@ -117,6 +118,16 @@ public class Sudoku extends JFrame {
                                 }
                             }
                         //}
+                    }
+                }
+
+                for (int row = 0; row < SudokuModel.BOARD_SIZE; row++) {
+                    for (int col = SudokuModel.BOARD_START_INDEX; col < SudokuModel.BOARD_SIZE; col++) {
+                        if(_sudokuLogic.getVal(row,col)==SudokuModel.NO_VALUE){
+                            int randInt = (new Random(System.currentTimeMillis())).nextInt(8)+1;
+                            _sudokuLogic.setVal(row,col,randInt);
+                            _sudokuBoard.repaint();
+                        }
                     }
                 }
 

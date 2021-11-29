@@ -133,53 +133,123 @@ public class SudokuModel {
         return returnValue;
     }
     private boolean rowConstraint2(int row,int column, int val) {
-        int[] constraintValue = initConstraintValue();
-        int puzzle = 5;
-        if (row < 9 && column < 9) {
-            puzzle = 1;
+
+        boolean  puzzleOne = false;
+        boolean  puzzleTwo = false;
+        boolean  puzzleThree = false;
+        boolean  puzzleFour = false;
+        boolean  puzzleFive = false;
+        if (row>=0 && column>=0 && row < 9 && column < 9) {
+            puzzleOne = true;
         }
 
-        if(row>=12 && column>=12){
-            puzzle = 4;
+        if(row>=0 && column>=12 && row<9 && column<21){
+            puzzleTwo = true;
         }
 
-        if(row>=12 && column<9){
-            puzzle = 3;
+        if(row>=12 && column>=0 && row<21 && column<9){
+            puzzleThree = true;
         }
 
-        if(row<9 && column>=12){
-            puzzle = 2;
+        if(row>=12 && column>=12 && row<21 && column<21){
+            puzzleFour = true;
         }
 
-        int start = -1;
+        if(row>=7 && column>=7 && row<16 && column<16){
+            puzzleFive = true;
+        }
 
-        switch (puzzle){
-            case 1:
-                start = 0;
-                break;
-            case 2:
-                start = 12;
-                break;
-            case 3:
-                start = 0;
-                break;
-            case 4:
-                start = 12;
-                break;
-            case 5:
-                start = 9;
+        int startOne = -1;
+        int startTwo = -1;
+        int startThree = -1;
+        int startFour = -1;
+        int startFive = -1;
+
+        if(puzzleOne){
+            startOne = 0;
+        }
+
+        if(puzzleTwo){
+            startTwo = 12;
+        }
+        if(puzzleThree){
+            startThree = 12;
+        }
+
+        if(puzzleFour){
+            startOne = 12;
+        }
+
+        if(puzzleFive){
+            startFive = 7;
         }
 
 
-        int finalStart = start;
-        boolean returnValue =  IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH-1)
-                .allMatch(index ->checkConstraintRow(constraintValue, finalStart +index, column,index,val));
+        if(puzzleOne) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartOne = startOne;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintRow(constraintValue, finalStartOne + index, column, index, val));
 
-        for(int i =0;i<constraintValue.length;i++){
-            if(constraintValue[i]>1){
-                return false;
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
             }
         }
+
+        if(puzzleTwo) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartTwo = startTwo;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintRow(constraintValue, finalStartTwo + index, column, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
+            }
+        }
+
+        if(puzzleThree) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartThree = startThree;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintRow(constraintValue, finalStartThree + index, column, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
+            }
+        }
+
+        if(puzzleFour) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartFour = startFour;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintRow(constraintValue, finalStartFour + index, column, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
+            }
+        }
+
+        if(puzzleFive) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartFive = startFive;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintRow(constraintValue, finalStartFive + index, column, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
+            }
+        }
+
 
         return true;
     }
@@ -193,54 +263,122 @@ public class SudokuModel {
     }
 
     private boolean columnConstraint2(int row, int column, int val) {
-        int[] constraintValue = initConstraintValue();
-
-        int puzzle = -1;
-        if (row < 9 && column < 9) {
-            puzzle = 1;
+        boolean  puzzleOne = false;
+        boolean  puzzleTwo = false;
+        boolean  puzzleThree = false;
+        boolean  puzzleFour = false;
+        boolean  puzzleFive = false;
+        if (row>=0 && column>=0 && row < 9 && column < 9) {
+            puzzleOne = true;
         }
 
-        if(row>=12 && column>=12){
-            puzzle = 4;
+        if(row>=0 && column>=12 && row<9 && column<21){
+            puzzleTwo = true;
         }
 
-        if(row>=12 && column<9){
-            puzzle = 3;
+        if(row>=12 && column>=0 && row<21 && column<9){
+            puzzleThree = true;
         }
 
-        if(row<9 && column>=12){
-            puzzle = 2;
+        if(row>=12 && column>=12 && row<21 && column<21){
+            puzzleFour = true;
         }
 
-        int start = 5;
-
-        switch (puzzle){
-            case 1:
-                start = 0;
-                break;
-            case 2:
-                start = 12;
-                break;
-            case 3:
-                start = 0;
-                break;
-            case 4:
-                start = 12;
-                break;
-            case 5:
-                start = 9;
-
+        if(row>=7 && column>=7 && row<16 && column<16){
+            puzzleFive = true;
         }
 
-        int finalStart = start;
-        boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH-1)
-                .allMatch(index ->checkConstraintColuwn(constraintValue, row, finalStart +index,index,val));
+        int startOne = -1;
+        int startTwo = -1;
+        int startThree = -1;
+        int startFour = -1;
+        int startFive = -1;
 
-        for(int i =0;i<constraintValue.length;i++){
-            if(constraintValue[i]>1){
-                return false;
+        if(puzzleOne){
+            startOne = 0;
+        }
+
+        if(puzzleTwo){
+            startTwo = 12;
+        }
+        if(puzzleThree){
+            startThree = 0;
+        }
+
+        if(puzzleFour){
+            startOne = 12;
+        }
+
+        if(puzzleFive){
+            startFive = 7;
+        }
+
+
+        if(puzzleOne) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartOne1 = startOne;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintColuwn(constraintValue, row, finalStartOne1+index, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
             }
         }
+
+        if(puzzleTwo) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartTwo1 = startTwo;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintColuwn(constraintValue, row, finalStartTwo1+index, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
+            }
+        }
+
+        if(puzzleThree) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartThree1 = startThree;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintColuwn(constraintValue, row, finalStartThree1+index, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
+            }
+        }
+
+        if(puzzleFour) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartFour1 = startFour;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintColuwn(constraintValue, row, finalStartFour1+index, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
+            }
+        }
+
+        if(puzzleFive) {
+            int[] constraintValue = initConstraintValue();
+            int finalStartFive1 = startFive;
+            boolean returnValue = IntStream.range(BOARD_START_INDEX, PUZZLE_LENGTH - 1)
+                    .allMatch(index -> checkConstraintColuwn(constraintValue, row, finalStartFive1+index, index, val));
+
+            for (int i = 0; i < constraintValue.length; i++) {
+                if (constraintValue[i] > 1) {
+                    return false;
+                }
+            }
+        }
+
 
         return true;
     }
