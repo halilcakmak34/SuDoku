@@ -109,7 +109,7 @@ public class Sudoku extends JFrame {
                                 if(_sudokuLogic.getVal(row,col)==SudokuModel.NO_VALUE){
                                     _sudokuLogic.setVal(row, col, k);
                                 }
-                                if (_sudokuLogic.isLegalMove2(row, col,_sudokuLogic.getVal(row,col))) {
+                                if(_sudokuLogic.isLegalMove2(row, col,_sudokuLogic.getVal(row,col))) {
                                     _sudokuBoard.repaint();
                                 }
                                 else{
